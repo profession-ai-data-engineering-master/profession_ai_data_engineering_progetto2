@@ -60,30 +60,30 @@ Per non "reinventare la ruota", la prima attività è stata la ricerca di un fra
 | **M** | Model | Costruire modelli predittivi/descrittivi |
 | **N** | iNterpret | Tradurre i risultati in decisioni e comunicarli agli stakeholder |
 
-## O — Obtain
+## O - Obtain
 I due dataset sono stati caricati con **pandas** direttamente dai link di download di Google Drive, rendendo il notebook eseguibile end-to-end senza download manuali. Dall'ispezione dei dati grezzi sono emersi subito tre nodi da risolvere in fase di Scrub: fuso orario non uniforme sulle date, valori `Volume = 0` anomali sull'EURO STOXX 50, e numero di sedute differente tra i due indici (2517 vs 2512).
 
-## S — Scrub
+## S - Scrub
 Pulizia e allineamento mirati alla natura dei dati di mercato:
 - **Verifica** preventiva di valori nulli e duplicati (nessuno riscontrato nei dataset di partenza).
 - **Uniformazione delle date in UTC** e successiva **normalizzazione alla mezzanotte** (`normalize`): i due indici registrano le sedute con fusi orari diversi, ma l'orario è irrilevante avendo una sola rilevazione giornaliera per indice.
 - **Rimozione delle righe con `Volume = 0`** sull'EURO STOXX 50 (giornate senza scambi reali, non informative).
 - **Allineamento sul calendario di trading comune**: tenuti solo i giorni presenti in entrambi gli indici (intersezione delle date), così da confrontare i due mercati a parità di contesto macro e geopolitico ed evitare distorsioni dovute a chiusure/festivi asimmetrici.
 
-## E — Explore
-- **Data Dictionary**: prima dell'analisi sono state formalizzate le feature di ciascun indice (tipo, descrizione, business rules es. `Low ≤ Open,Close ≤ High`; significato del `Volume` come somma stimata degli scambi sui titoli che compongono l'indice, non sull'indice stesso). Questa scelta — derivata dall'esperienza professionale — riduce gli errori concettuali nella manipolazione dei dati.
+## E - Explore
+- **Data Dictionary**: prima dell'analisi sono state formalizzate le feature di ciascun indice (tipo, descrizione, business rules es. `Low ≤ Open,Close ≤ High`; significato del `Volume` come somma stimata degli scambi sui titoli che compongono l'indice, non sull'indice stesso). Questa scelta - derivata dall'esperienza professionale - riduce gli errori concettuali nella manipolazione dei dati.
 - **Analisi preliminare** (dimensioni, tipi, nulli, statistiche descrittive) sui dataset puliti.
 - **Feature engineering**: rendimenti percentuali **giornaliero, mensile e annuale** (variazione % del prezzo di chiusura sul periodo precedente), giorno della settimana e chiavi di periodo, a supporto dei quattro quesiti.
 - **Risposta ai quesiti della consegna (Q1–Q4)**, ciascuno con analisi, visualizzazioni e conclusioni:
-  - **Q1 — Rendimento percentuale**: rendimenti giornaliero/mensile/annuale confrontati tra i due indici, affiancati alla **performance cumulata** (`(1+r).cumprod()`). Evidenza: S&P 500 più performante e resiliente (es. recupero post-COVID), EURO STOXX 50 mediamente più volatile.
-  - **Q2 — Rendimento medio per giorno della settimana**: aggregazione per giorno e confronto a barre. I risultati sono stati interpretati alla luce di fenomeni documentati (*reverse weekend effect* sull'S&P 500, reazione ritardata dei listini euro, diversa composizione settoriale USA/Europa).
-  - **Q3 — Giorni di rendimento estremo**: il quesito è stato impostato come **outlier detection** anziché semplice max/min. È stato scelto il **metodo IQR** (e non lo Z-score, che assume distribuzione normale) con **fattore 5** per isolare solo gli eventi realmente eccezionali. Le giornate individuate sono state ricondotte ad eventi reali di mercato (Black Monday 2015/2020, Volmageddon, Brexit, ecc.).
-  - **Q4 — Volume medio giornaliero**: confronto delle medie; l'S&P 500 scambia oltre il doppio dei volumi dell'EURO STOXX 50.
+  - **Q1 - Rendimento percentuale**: rendimenti giornaliero/mensile/annuale confrontati tra i due indici, affiancati alla **performance cumulata** (`(1+r).cumprod()`). Evidenza: S&P 500 più performante e resiliente (es. recupero post-COVID), EURO STOXX 50 mediamente più volatile.
+  - **Q2 - Rendimento medio per giorno della settimana**: aggregazione per giorno e confronto a barre. I risultati sono stati interpretati alla luce di fenomeni documentati (*reverse weekend effect* sull'S&P 500, reazione ritardata dei listini euro, diversa composizione settoriale USA/Europa).
+  - **Q3 - Giorni di rendimento estremo**: il quesito è stato impostato come **outlier detection** anziché semplice max/min. È stato scelto il **metodo IQR** (e non lo Z-score, che assume distribuzione normale) con **fattore 5** per isolare solo gli eventi realmente eccezionali. Le giornate individuate sono state ricondotte ad eventi reali di mercato (Black Monday 2015/2020, Volmageddon, Brexit, ecc.).
+  - **Q4 - Volume medio giornaliero**: confronto delle medie; l'S&P 500 scambia oltre il doppio dei volumi dell'EURO STOXX 50.
 
-## M — Model
+## M - Model
 Fase **non sviluppata consapevolmente**: esula dalle competenze di AI/Data Science maturate finora. Viene mantenuta esplicitamente nel flusso per coerenza e rigore nell'applicazione di OSEMN, come spazio per estensioni future (es. modelli predittivi sui rendimenti).
 
-## N — iNterpret
+## N - iNterpret
 Gli insight sono stati tradotti in indicazioni operative per gli investitori:
 - **Q1**: allocazione **core-satellite** ispirata alla *Modern Portfolio Theory* (≈65–70% core USA, 20–25% satellite Europa, 10–15% cuscinetto difensivo) per bilanciare rendimento e rischio geografico.
 - **Q2**: timing degli acquisti coerente con gli effetti di calendario osservati (preferenza per il lunedì sull'S&P 500, prudenza a metà settimana sull'Europa).
