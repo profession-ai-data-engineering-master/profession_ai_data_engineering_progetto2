@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  ci:
+    name: Lint & esecuzione notebook
+    runs-on: ubuntu-latest
+    env:
+      MPLBACKEND: Agg
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Installa dipendenze
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
+
+      - name: Lint del notebook (ruff via nbqa)
+        run: nbqa ruff profession_ai_data_engineering_progetto2.ipynb
+
+      - name: Esecuzione end-to-end del notebook (nbmake)
+        run: pytest --nbmake profession_ai_data_engineering_progetto2.ipynb

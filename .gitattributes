@@ -1,0 +1,5 @@
+# Normalizza i file di testo a LF nel repository (evita churn CRLF su Windows).
+* text=auto eol=lf
+
+# I CSV restano invariati (nessuna conversione di fine riga sui dati).
+*.csv -text
