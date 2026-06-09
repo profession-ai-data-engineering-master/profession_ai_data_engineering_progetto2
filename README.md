@@ -1,4 +1,7 @@
 # Analisi dell'Andamento degli Indici Azionari S&P 500 ed EURO STOXX 50
+
+[![CI](https://github.com/profession-ai-data-engineering-master/profession_ai_data_engineering_progetto2/actions/workflows/ci.yml/badge.svg)](https://github.com/profession-ai-data-engineering-master/profession_ai_data_engineering_progetto2/actions/workflows/ci.yml)
+
 ## Descrizione del progetto
 
 L'azienda Global Investment Insights è una società di consulenza finanziaria che si occupa di fornire analisi dettagliate sull'andamento dei mercati azionari. Il progetto si concentra su due indici fondamentali: - S&P 500: che rappresenta il mercato azionario statunitense. - EURO STOXX 50: che descrive l'andamento del mercato azionario europeo.
@@ -61,7 +64,7 @@ Per non "reinventare la ruota", la prima attività è stata la ricerca di un fra
 | **N** | iNterpret | Tradurre i risultati in decisioni e comunicarli agli stakeholder |
 
 ## O - Obtain
-I due dataset sono stati caricati con **pandas** direttamente dai link di download di Google Drive, rendendo il notebook eseguibile end-to-end senza download manuali. Dall'ispezione dei dati grezzi sono emersi subito tre nodi da risolvere in fase di Scrub: fuso orario non uniforme sulle date, valori `Volume = 0` anomali sull'EURO STOXX 50, e numero di sedute differente tra i due indici (2517 vs 2512).
+I due dataset sono **versionati nel repository** in `data/` (`data/sp500.csv`, `data/euro50.csv`) — originariamente forniti via Google Drive — e caricati con **pandas** da file locale: il notebook è così eseguibile end-to-end e riproducibile offline, senza download manuali né dipendenze di rete. Dall'ispezione dei dati grezzi sono emersi subito tre nodi da risolvere in fase di Scrub: fuso orario non uniforme sulle date, valori `Volume = 0` anomali sull'EURO STOXX 50, e numero di sedute differente tra i due indici (2517 vs 2512).
 
 ## S - Scrub
 Pulizia e allineamento mirati alla natura dei dati di mercato:
@@ -94,4 +97,20 @@ Gli insight sono stati tradotti in indicazioni operative per gli investitori:
 - **Framework riconosciuto** (OSEMN) al posto di un processo ad-hoc, con motivazione esplicita della scelta rispetto a CRISP-DM.
 - **Confronto equo tra indici** garantito da normalizzazione delle date e allineamento sul calendario comune.
 - **Metodi statistici motivati** (IQR vs Z-score) e **Data Dictionary** come presidio di qualità sui dati.
-- **Riproducibilità**: dati caricati da URL, nessuno stato esterno necessario per rieseguire l'analisi.
+- **Riproducibilità**: dataset versionati nel repo (`data/`) e caricati da file locale; nessuno stato esterno né dipendenza di rete per rieseguire l'analisi.
+
+## Come eseguire
+
+```bash
+pip install -r requirements.txt
+jupyter notebook profession_ai_data_engineering_progetto2.ipynb
+```
+
+I dataset sono già inclusi in `data/`: il notebook gira end-to-end senza ulteriore configurazione.
+
+## Qualità e CI
+
+Una pipeline **GitHub Actions** (`.github/workflows/ci.yml`) viene eseguita a ogni push e Pull Request su `main`:
+
+- **Lint** del codice del notebook con `ruff` (via `nbqa`);
+- **Esecuzione end-to-end** del notebook con `nbmake`, a garanzia che l'analisi resti sempre riproducibile.
